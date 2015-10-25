@@ -1,5 +1,6 @@
 package com.jackson.weather.core;
 
+import com.jackson.weather.model.URLBuilder;
 import com.jackson.weather.model.WeatherData;
 
 import org.json.JSONException;
@@ -19,7 +20,17 @@ import java.net.URL;
  */
 public class WundergroundFetcher {
 
-    public static String fetchStringFromURL(URL url) {
+    public WeatherData getWeatherData() {
+        URLBuilder urlBuilder = new URLBuilder();
+        urlBuilder.setFeature("conditions/");
+//        urlBuilder.setSetting("lang:CN/");
+        urlBuilder.setQuery("22202");
+        urlBuilder.setFormat(".json");
+
+        return convertString2WeatherData(fetchStringFromURL(urlBuilder.toURL()));
+    }
+
+    public String fetchStringFromURL(URL url) {
 
         try {
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -39,22 +50,25 @@ public class WundergroundFetcher {
             return response.toString();
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-
-        return "No string is retrieved.";
     }
 
-    public static WeatherData convertString2WeatherData(String inputString) {
+    public WeatherData convertString2WeatherData(String inputString) {
         WeatherData weatherData = new WeatherData();
 
         try {
             JSONObject jsonObject = new JSONObject(inputString);
+            //TODO if the json return does not include the data we want
+            //TODO should return a list of weather info instead of just one day
             weatherData.setTempC(jsonObject.getJSONObject("current_observation").getDouble("temp_c"));
 
         } catch (JSONException e) {
             e.printStackTrace();
+            //TODO do something if no the input string is not a json object
         }
 
         return weatherData;

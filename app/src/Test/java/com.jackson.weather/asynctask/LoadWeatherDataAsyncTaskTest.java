@@ -1,5 +1,8 @@
 package com.jackson.weather.asynctask;
 
+import com.jackson.weather.asynctask.listener.AsyncTaskCompletionListener;
+import com.jackson.weather.model.WeatherData;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +12,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.concurrent.ExecutionException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -18,10 +22,16 @@ import static org.junit.Assert.assertNotNull;
 @Config(manifest = "src/main/AndroidManifest.xml", sdk = 21)
 @RunWith(RobolectricTestRunner.class)
 public class LoadWeatherDataAsyncTaskTest {
-    LoadWeatherDataAsyncTask mLoadWeatherDataAsyncTask = new LoadWeatherDataAsyncTask();
+    LoadWeatherDataAsyncTask mLoadWeatherDataAsyncTask;
 
     @Before
     public void setup() {
+        mLoadWeatherDataAsyncTask = new LoadWeatherDataAsyncTask(new AsyncTaskCompletionListener<WeatherData>() {
+            @Override
+            public void onTaskComplete(WeatherData result) {
+
+            }
+        });
         mLoadWeatherDataAsyncTask.execute();
     }
 
@@ -29,7 +39,6 @@ public class LoadWeatherDataAsyncTaskTest {
     public void shouldNotNull() {
         Robolectric.flushBackgroundThreadScheduler();
 
-        //can run asserts on result now
         try {
             assertNotNull(mLoadWeatherDataAsyncTask.get());
         } catch (InterruptedException e) {
@@ -37,5 +46,11 @@ public class LoadWeatherDataAsyncTaskTest {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void getTempCTest() {
+        Robolectric.flushBackgroundThreadScheduler();
+        assertEquals(14.5, mLoadWeatherDataAsyncTask.doInBackground().getTempC(), 0.1);
     }
 }

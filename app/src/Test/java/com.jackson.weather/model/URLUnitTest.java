@@ -13,7 +13,7 @@ public class URLUnitTest {
     public void testURL() {
         URLBuilder urlBuilder = new URLBuilder();
         urlBuilder.setFeature("forecast/");
-//        urlBuilder.setSetting("lang:CN/");
+        urlBuilder.setSetting("lang:CN/");
         urlBuilder.setQuery("22202");
         urlBuilder.setFormat(".json");
 

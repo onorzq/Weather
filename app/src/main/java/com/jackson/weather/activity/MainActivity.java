@@ -1,19 +1,42 @@
 package com.jackson.weather.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jackson.weather.R;
+import com.jackson.weather.asynctask.LoadWeatherDataAsyncTask;
+import com.jackson.weather.asynctask.listener.AsyncTaskCompletionListener;
+import com.jackson.weather.model.WeatherData;
 
 public class MainActivity extends AppCompatActivity {
+    private ListView mListView;
+    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mListView = (ListView) findViewById(R.id.weather_list);
+        mTextView = (TextView) findViewById(R.id.hello);
+
+        LoadWeatherDataAsyncTask loadWeatherDataAsyncTask = new LoadWeatherDataAsyncTask(new AsyncTaskCompletionListener<WeatherData>() {
+            @Override
+            public void onTaskComplete(WeatherData result) {
+                mTextView.setText("temp c" + result.getTempC());
+            }
+        });
+        loadWeatherDataAsyncTask.execute();
     }
+
+//    public void weatherDataFetched(List<WeatherData> weatherData) {
+//        ArrayAdapter<WeatherData> adapter = new ArrayAdapter<WeatherData>(this,R.layout.list_item, weatherData);
+//        mListView.setAdapter(adapter);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

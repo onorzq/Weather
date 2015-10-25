@@ -1,5 +1,8 @@
 package com.jackson.weather.model;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Created by zhishengliu on 10/24/15.
  */
@@ -49,6 +52,15 @@ public class URLBuilder {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public URL toURL() {
+        try {
+            return new URL(toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
