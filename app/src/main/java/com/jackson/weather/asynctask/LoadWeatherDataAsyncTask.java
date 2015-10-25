@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.jackson.weather.activity.adapter.ImageAdapter;
 import com.jackson.weather.asynctask.listener.AsyncTaskCompletionListener;
 import com.jackson.weather.core.WundergroundFetcher;
 import com.jackson.weather.model.WeatherData;
+
+import java.util.ArrayList;
 
 /**
  * Created by zhishengliu on 10/24/15.
@@ -16,10 +19,16 @@ public class LoadWeatherDataAsyncTask extends AsyncTask<String, Integer, Weather
 
 //    private Context mContext;
     private AsyncTaskCompletionListener<WeatherData> mListener;
+    private ImageAdapter mImageAdapter;
 
-    public LoadWeatherDataAsyncTask(AsyncTaskCompletionListener<WeatherData> listener) {
+//    public LoadWeatherDataAsyncTask(AsyncTaskCompletionListener<WeatherData> listener) {
+////        mContext = context;
+//        mListener = listener;
+//    }
+
+    public LoadWeatherDataAsyncTask(ImageAdapter adapter) {
 //        mContext = context;
-        mListener = listener;
+        mImageAdapter = adapter;
     }
 
     @SuppressLint("LongLogTag")
@@ -39,7 +48,10 @@ public class LoadWeatherDataAsyncTask extends AsyncTask<String, Integer, Weather
     @Override
     protected void onPostExecute(WeatherData result) {
         Log.i(TAG, "onPostExecute post data from wunderground");
-        super.onPostExecute(result);
-        mListener.onTaskComplete(result);
+//        super.onPostExecute(result);
+//        mListener.onTaskComplete(result);
+        ArrayList<WeatherData> resultList = new ArrayList<WeatherData>();
+        resultList.add(result);
+        mImageAdapter.upDateEntries(resultList);
     }
 }

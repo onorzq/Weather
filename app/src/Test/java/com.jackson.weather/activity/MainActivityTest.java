@@ -38,4 +38,10 @@ public class MainActivityTest {
         TextView textView = (TextView) mMainActivity.findViewById(R.id.hello);
         assertEquals("temp c20.3", textView.getText().toString());
     }
+
+    @Test
+    public void shouldListViewDisplayTempC() {
+        TextView textView = (TextView) mMainActivity.findViewById(R.id.firstLine);
+        assertEquals("temp c20.3", textView.getText().toString());
+    }
 }

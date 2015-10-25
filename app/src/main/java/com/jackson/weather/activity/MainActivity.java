@@ -8,13 +8,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jackson.weather.R;
+import com.jackson.weather.activity.adapter.ImageAdapter;
+import com.jackson.weather.activity.adapter.ListViewAdapter;
 import com.jackson.weather.asynctask.LoadWeatherDataAsyncTask;
-import com.jackson.weather.asynctask.listener.AsyncTaskCompletionListener;
 import com.jackson.weather.model.WeatherData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ListView mListView;
     private TextView mTextView;
+    private ListViewAdapter mListViewAdapter;
+    private LoadWeatherDataAsyncTask loadWeatherDataAsyncTask;
+    private List<WeatherData> mWeatherDataList = new ArrayList<WeatherData>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +29,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mListView = (ListView) findViewById(R.id.weather_list);
-        mTextView = (TextView) findViewById(R.id.hello);
+//        mTextView = (TextView) findViewById(R.id.hello);
 
-        LoadWeatherDataAsyncTask loadWeatherDataAsyncTask = new LoadWeatherDataAsyncTask(new AsyncTaskCompletionListener<WeatherData>() {
-            @Override
-            public void onTaskComplete(WeatherData result) {
-                mTextView.setText("temp c" + result.getTempC());
-            }
-        });
-        loadWeatherDataAsyncTask.execute();
+
+
+//        mListViewAdapter = new ListViewAdapter(MainActivity.this, mWeatherDataList);
+//        mListView.setAdapter(mListViewAdapter);
+
+        ImageAdapter adapter = new ImageAdapter(this);
+
+
+        LoadWeatherDataAsyncTask task = new LoadWeatherDataAsyncTask(adapter);
+        task.execute();
+        mListView.setAdapter(adapter);
     }
 
 //    public void weatherDataFetched(List<WeatherData> weatherData) {
