@@ -9,13 +9,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.jackson.weather.R;
 import com.jackson.weather.activity.adapter.ListViewAdapter;
 import com.jackson.weather.asynctask.LoadWeatherDataAsyncTask;
 import com.jackson.weather.sensor.LocationFinder;
+import com.jackson.weather.shareprefstorage.SharedPreferencesStorage;
 
-public class MainActivity extends AppCompatActivity implements LocationFinder.LocationDetector {
+public class MainActivity extends AppCompatActivity implements LocationFinder.LocationDetector,
+        LoadWeatherDataAsyncTask.TaskCompletionListener {
     private static final String TAG = "MainActivity";
 
     private ListView mListView;
@@ -24,29 +27,46 @@ public class MainActivity extends AppCompatActivity implements LocationFinder.Lo
     private String latitudeAndlongitude;
     private LocationFinder mLocationFinder;
     private boolean isAsyncTaskExecuted;
-    private ProgressDialog mProgressDialog;
+    private ProgressDialog mGetLocationProgressDialog;
+    private ProgressDialog mGetWeatherProgressDialog;
+    private SharedPreferencesStorage mSharedPreferencesStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.setMessage(this.getString(R.string.find_location));
-        mProgressDialog.show();
+        mSharedPreferencesStorage = new SharedPreferencesStorage(this);
 
-        mLocationFinder = new LocationFinder(this, this);
-        mLocationFinder.detectLocation();
+        mGetLocationProgressDialog = new ProgressDialog(this);
+        mGetLocationProgressDialog.setCancelable(true);
+        mGetLocationProgressDialog.setCanceledOnTouchOutside(false);
+        mGetLocationProgressDialog.setMessage(this.getString(R.string.find_location));
+        mGetLocationProgressDialog.show();
+
 
         mListView = (ListView) findViewById(R.id.weather_list);
         mListViewAdapter = new ListViewAdapter(this);
         mListView.setAdapter(mListViewAdapter);
 
-        mloadWeatherDataAsyncTask = new LoadWeatherDataAsyncTask(this, mListViewAdapter);
+        if (mSharedPreferencesStorage.getIsNetworkLocation()) {
+            mLocationFinder = new LocationFinder(this, this);
+            mLocationFinder.detectLocation();
 
-        isAsyncTaskExecuted = false;
+            mloadWeatherDataAsyncTask = new LoadWeatherDataAsyncTask(this, mListViewAdapter);
+            mloadWeatherDataAsyncTask.setCompletionListener(this);
+
+            isAsyncTaskExecuted = false;
+        } else {
+            if (mGetLocationProgressDialog.isShowing()) {
+                mGetLocationProgressDialog.dismiss();
+            }
+
+            mloadWeatherDataAsyncTask = new LoadWeatherDataAsyncTask(this, mListViewAdapter);
+            mloadWeatherDataAsyncTask.setCompletionListener(this);
+            mloadWeatherDataAsyncTask.execute();
+        }
+
 
     }
 
@@ -68,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements LocationFinder.Lo
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingActivity.class);
             startActivity(intent);
-            
+
             return true;
         }
 
@@ -81,18 +101,47 @@ public class MainActivity extends AppCompatActivity implements LocationFinder.Lo
 
         latitudeAndlongitude = location.getLatitude() + "," + location.getLongitude();
 
-        if (mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+
+        if (mGetLocationProgressDialog.isShowing()) {
+            mGetLocationProgressDialog.dismiss();
         }
 
         if (!isAsyncTaskExecuted) {
+            Log.d(TAG, "location found, latitudeAndlongitude " + latitudeAndlongitude);
             mloadWeatherDataAsyncTask.execute(latitudeAndlongitude);
             isAsyncTaskExecuted = true;
         }
     }
 
     @Override
-    public void locationNotFound(LocationFinder.FailureReason failureReason) {
+    protected void onDestroy() {
+        super.onDestroy();
+        mGetLocationProgressDialog.dismiss();
+        if(mGetWeatherProgressDialog != null){
+            mGetWeatherProgressDialog.dismiss();
+        }
 
+    }
+
+
+    @Override
+    public void locationNotFound(LocationFinder.FailureReason failureReason) {
+        Toast.makeText(this, failureReason.toString(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void taskStart() {
+        mGetWeatherProgressDialog = new ProgressDialog(this);
+        mGetWeatherProgressDialog.setCancelable(true);
+        mGetWeatherProgressDialog.setCanceledOnTouchOutside(false);
+        mGetWeatherProgressDialog.setMessage(this.getString(R.string.find_location));
+        mGetWeatherProgressDialog.show();
+    }
+
+    @Override
+    public void taskComplete() {
+        if (mGetWeatherProgressDialog != null) {
+            mGetWeatherProgressDialog.dismiss();
+        }
     }
 }

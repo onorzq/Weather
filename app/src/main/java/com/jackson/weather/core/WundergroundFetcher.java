@@ -1,5 +1,7 @@
 package com.jackson.weather.core;
 
+import android.util.Log;
+
 import com.jackson.weather.model.URLBuilder;
 import com.jackson.weather.model.WeatherData;
 
@@ -20,6 +22,8 @@ import java.util.ArrayList;
  * Created by zhishengliu on 10/24/15.
  */
 public class WundergroundFetcher {
+    private static final String TAG = "WundergroundFetcher";
+
     private String location;
     private int numOfDays;
 
@@ -41,12 +45,13 @@ public class WundergroundFetcher {
     public String fetchStringFromURL(URL url) {
 
         try {
+            Log.d(TAG, "before httpurlconnection");
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             StringBuffer response = new StringBuffer();
             String inputLine;
-
+            Log.d(TAG, "after httpurlconnection");
             while ((inputLine = bufferedReader.readLine()) != null) {
                 response.append(inputLine);
             }
@@ -57,9 +62,12 @@ public class WundergroundFetcher {
 
             return response.toString();
         } catch (MalformedURLException e) {
+            Log.d(TAG, "malformed url exception");
             e.printStackTrace();
+//            Toast.makeText(mContext, mContext.getString(R.string.malformed_url), Toast.LENGTH_SHORT).show();
             return null;
         } catch (IOException e) {
+            Log.d(TAG, "io exception");
             e.printStackTrace();
             return null;
         }
@@ -68,18 +76,28 @@ public class WundergroundFetcher {
     public ArrayList<WeatherData> convertString2WeatherData(String inputString) {
 
         try {
+            Log.d(TAG, "before string 2 weather data list");
             ArrayList<WeatherData> weatherList = new ArrayList<WeatherData>();
             JSONObject jsonObject = new JSONObject(inputString);
             //TODO if the json return does not include the data we want
 
             for (int i = 0; i < numOfDays; i++) {
-                weatherList.add(convertJson2WeatherData(jsonObject, i));
+                WeatherData weatherData = convertJson2WeatherData(jsonObject, i);
+                if(weatherData == null) {
+                    return new ArrayList<WeatherData>();
+                }
+                weatherList.add(weatherData);
             }
 
             return weatherList;
         } catch (JSONException e) {
+            Log.d(TAG, "json error in string 2 weather data list");
             e.printStackTrace();
-            //TODO do something if no the input string is not a json object
+//            Toast.makeText(mContext, mContext.getString(R.string.no_json_get), Toast.LENGTH_SHORT).show();
+            return null;
+        } catch (NullPointerException npe) {
+            Log.d(TAG, "null pointer exception in string 2 weather data list");
+            npe.printStackTrace();
             return null;
         }
     }
@@ -87,6 +105,7 @@ public class WundergroundFetcher {
     public WeatherData convertJson2WeatherData(JSONObject json, int theNthDay) {
 
         try {
+            Log.d(TAG, "before json 2 weather data");
             JSONObject singleDayJson = json.getJSONObject("forecast")
                     .getJSONObject("simpleforecast")
                     .getJSONArray("forecastday")
@@ -109,6 +128,12 @@ public class WundergroundFetcher {
             return weatherData;
         } catch (JSONException e) {
             e.printStackTrace();
+            Log.d(TAG, "json error in json 2 weather data");
+//            Toast.makeText(mContext, mContext.getString(R.string.no_json_get), Toast.LENGTH_SHORT).show();
+            return null;
+        } catch (NullPointerException npe) {
+            Log.d(TAG, "null pointer exception in json 2 weather data");
+            npe.printStackTrace();
             return null;
         }
     }

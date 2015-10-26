@@ -16,6 +16,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.NumberPicker.OnValueChangeListener;
+import android.widget.Toast;
 
 import com.jackson.weather.R;
 import com.jackson.weather.shareprefstorage.SharedPreferencesStorage;
@@ -59,7 +60,6 @@ public class SettingActivity extends AppCompatActivity {
         });
 
 
-
         zipNetworkLocationSwitch.setChecked(mSharedPreferencesStorage.getIsNetworkLocation());
         zipNetworkLocationSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -94,40 +94,43 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         zipCodeEditText.setText(mSharedPreferencesStorage.getZipCode());
-        if(mSharedPreferencesStorage.getIsNetworkLocation()) {
+        if (mSharedPreferencesStorage.getIsNetworkLocation()) {
             zipCodeEditText.setEnabled(false);
             zipCodeEditText.setTextColor(Color.GRAY);
         }
-
 
         mTextWatcher = new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.d(TAG, zipCodeEditText.getText().length()+"");
-                mSharedPreferencesStorage.setZipCode(zipCodeEditText.getText().toString());
-//                if (zipCodeEditText.getText().length() != DEFAULT_LENGTH_OF_ZIP_CODE) {
-//                    mSharedPreferencesStorage.setZipCode(mSharedPreferencesStorage.ZIP_CODE_DEFAULT);
-//                    Log.d(TAG, zipCodeEditText.getText().length()+"");
-//                } else {
-//                    try {
-//                        Integer.parseInt(zipCodeEditText.getText().toString());
-//                        mSharedPreferencesStorage.setZipCode(zipCodeEditText.getText().toString());
-//                        Log.d(TAG,zipCodeEditText.getText().toString());
-//                    } catch (Exception e) {
-//                        e.getStackTrace();
-//                    }
-//                }
+                Log.d(TAG, zipCodeEditText.getText().length() + "");
+
+                try {
+                    int zipcode = Integer.parseInt(zipCodeEditText.getText().toString());
+                    if (zipcode > 1000 && zipcode < 99999) {
+                        mSharedPreferencesStorage.setZipCode(zipCodeEditText.getText().toString());
+                    } else {
+                        Toast.makeText(SettingActivity.this,
+                                SettingActivity.this.getString(R.string.zipcode_out_of_bound),
+                                Toast.LENGTH_SHORT).show();
+                        mSharedPreferencesStorage.setZipCode(mSharedPreferencesStorage.ZIP_CODE_DEFAULT);
+                    }
+                    Log.d(TAG, zipCodeEditText.getText().toString());
+                } catch (Exception e) {
+                    e.getStackTrace();
+                    Toast.makeText(SettingActivity.this,
+                            SettingActivity.this.getString(R.string.invalid_zipcode),
+                            Toast.LENGTH_SHORT).show();
+                    mSharedPreferencesStorage.setZipCode(mSharedPreferencesStorage.ZIP_CODE_DEFAULT);
+                }
             }
         };
 

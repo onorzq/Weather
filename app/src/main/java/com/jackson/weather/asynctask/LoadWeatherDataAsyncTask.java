@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jackson.weather.R;
 import com.jackson.weather.shareprefstorage.SharedPreferencesStorage;
@@ -24,21 +25,28 @@ public class LoadWeatherDataAsyncTask extends AsyncTask<String, Integer, ArrayLi
     private ListViewAdapter mListViewAdapter;
     private ProgressDialog mProgressDialog;
     private SharedPreferencesStorage mSharedPreferencesStorage;
+    private TaskCompletionListener mTaskCompletionListener;
+
+    public interface TaskCompletionListener{
+        public void taskStart();
+        public void taskComplete();
+    }
 
 
     public LoadWeatherDataAsyncTask(Context context, ListViewAdapter adapter) {
         mContext = context;
         mListViewAdapter = adapter;
-        mProgressDialog = new ProgressDialog(context);
+
         mSharedPreferencesStorage = new SharedPreferencesStorage(context);
+    }
+
+    public void setCompletionListener(TaskCompletionListener completionListener){
+        mTaskCompletionListener = completionListener;
     }
 
     @Override
     protected void onPreExecute() {
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.setMessage(mContext.getString(R.string.download_weather_data));
-        mProgressDialog.show();
+        mTaskCompletionListener.taskStart();
     }
 
     @SuppressLint("LongLogTag")
@@ -65,10 +73,19 @@ public class LoadWeatherDataAsyncTask extends AsyncTask<String, Integer, ArrayLi
     protected void onPostExecute(ArrayList<WeatherData> result) {
         Log.i(TAG, "onPostExecute post data from wunderground");
 //        super.onPostExecute(result);
-        mListViewAdapter.upDateEntries(result);
 
-        if (mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+
+        if (result == null) {
+            Toast.makeText(mContext, mContext.getString(R.string.no_json_get), Toast.LENGTH_SHORT).show();
         }
+        else if(result.size() == 0) {
+            Toast.makeText(mContext, mContext.getString(R.string.wrong_json_get), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            mListViewAdapter.upDateEntries(result);
+        }
+
+        mTaskCompletionListener.taskComplete();
     }
+
 }

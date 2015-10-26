@@ -17,4 +17,8 @@
     <string name="list_date">date</string>
     <string name="find_location">Finding Location</string>
     <string name="download_weather_data">Downloading Weather Data</string>
+    <string name="invalid_zipcode">zip code must be integer, otherwise will set to default</string>
+    <string name="zipcode_out_of_bound">zip code should be 4 or 5 digits, otherwise will set to default</string>
+    <string name="no_json_get">fail to get json data, make sure you are online</string>
+    <string name="wrong_json_get">the json did not contain weather data, please check the zip code is correct</string>
 </resources>

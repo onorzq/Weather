@@ -18,4 +18,8 @@
     <string name="list_date">日期</string>
     <string name="find_location">正在定位中</string>
     <string name="download_weather_data">正在下载天气资料</string>
+    <string name="invalid_zipcode">邮编必须整数否则重置默认值</string>
+    <string name="zipcode_out_of_bound">邮编必须4或5位数否则重置默认值</string>
+    <string name="no_json_get">无法获得json数据，请检查网络连接</string>
+    <string name="wrong_json_get">获得json不含天气数据，请检查邮编是否正确</string>
 </resources>

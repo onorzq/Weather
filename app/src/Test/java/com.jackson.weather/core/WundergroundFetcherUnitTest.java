@@ -31,7 +31,7 @@ public class WundergroundFetcherUnitTest {
 
     @Test
     public void weatherApiTest() {
-        WeatherData weatherData = new WundergroundFetcher().getWeatherData().get(0);
+        WeatherData weatherData = new WundergroundFetcher("22202", 10).getWeatherData().get(0);
 
         assertEquals("14.5", weatherData.getTempCHi());
     }
