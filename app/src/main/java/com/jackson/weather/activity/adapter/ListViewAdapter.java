@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jackson.weather.R;
+import com.jackson.weather.Storage.SharedPreferencesStorage;
 import com.jackson.weather.model.WeatherData;
 import com.koushikdutta.ion.Ion;
 
@@ -19,16 +20,15 @@ import java.util.ArrayList;
  */
 public class ListViewAdapter extends BaseAdapter {
     private Context mContext;
-
     private LayoutInflater mLayoutInflater;
-
     private ArrayList<WeatherData> mWeatherDataArrayList = new ArrayList<WeatherData>();
-
+    private SharedPreferencesStorage mSharedPreferencesStorage;
 
     public ListViewAdapter(Context context) {
         mContext = context;
         mLayoutInflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mSharedPreferencesStorage = new SharedPreferencesStorage(context);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ListViewAdapter extends BaseAdapter {
         TextView dateTextView = (TextView) view.findViewById(R.id.date_text);
 //TODO setting of celsius and fahrenheit
         boolean isCelsius = true;
-        if (isCelsius) {
+        if (mSharedPreferencesStorage.getIsCelsius()) {
             hiTempTextView.setText(mWeatherDataArrayList.get(position).getTempCHi() + " °C");
             loTemptextView.setText(mWeatherDataArrayList.get(position).getTempCLo() + " °C");
         } else {

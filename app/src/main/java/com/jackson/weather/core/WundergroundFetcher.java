@@ -20,8 +20,15 @@ import java.util.ArrayList;
  * Created by zhishengliu on 10/24/15.
  */
 public class WundergroundFetcher {
+    private String location;
+    private int numOfDays;
 
-    public ArrayList<WeatherData> getWeatherData(String location) {
+    public WundergroundFetcher(String location, int numOfDays) {
+        this.location = location;
+        this.numOfDays = numOfDays;
+    }
+
+    public ArrayList<WeatherData> getWeatherData() {
 //        location = "22202";
 //        Log.d("weather fetc", location);
         URLBuilder urlBuilder = new URLBuilder();
@@ -66,8 +73,7 @@ public class WundergroundFetcher {
             ArrayList<WeatherData> weatherList = new ArrayList<WeatherData>();
             JSONObject jsonObject = new JSONObject(inputString);
             //TODO if the json return does not include the data we want
-//TODO setting of number of days
-            int numOfDays = 10;
+
             for (int i = 0; i < numOfDays; i++) {
                 weatherList.add(convertJson2WeatherData(jsonObject, i));
             }

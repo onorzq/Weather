@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.jackson.weather.Storage.SharedPreferencesStorage;
 import com.jackson.weather.activity.adapter.ListViewAdapter;
 import com.jackson.weather.core.WundergroundFetcher;
 import com.jackson.weather.model.WeatherData;
@@ -21,12 +22,14 @@ public class LoadWeatherDataAsyncTask extends AsyncTask<String, Integer, ArrayLi
     private Context mContext;
     private ListViewAdapter mListViewAdapter;
     private ProgressDialog mProgressDialog;
+    private SharedPreferencesStorage mSharedPreferencesStorage;
 
 
     public LoadWeatherDataAsyncTask(Context context, ListViewAdapter adapter) {
         mContext = context;
         mListViewAdapter = adapter;
         mProgressDialog = new ProgressDialog(context);
+        mSharedPreferencesStorage = new SharedPreferencesStorage(context);
     }
 
     @Override
@@ -42,12 +45,18 @@ public class LoadWeatherDataAsyncTask extends AsyncTask<String, Integer, ArrayLi
     protected ArrayList<WeatherData> doInBackground(String... params) {
 
         Log.i(TAG, "doInBackground get data from wunderground");
-        return new WundergroundFetcher().getWeatherData(params[0]);
+        String location;
+        if (mSharedPreferencesStorage.getIsNetworkLocation()) {
+            location = params[0];
+        } else {
+            location = mSharedPreferencesStorage.getZipCode();
+        }
+        return new WundergroundFetcher(location,
+                mSharedPreferencesStorage.getNumOfDays2Display()).getWeatherData();
     }
 
     @Override
-    protected void onProgressUpdate(Integer... params){
-        //TODO progress bar
+    protected void onProgressUpdate(Integer... params) {
     }
 
     @SuppressLint("LongLogTag")
@@ -56,6 +65,7 @@ public class LoadWeatherDataAsyncTask extends AsyncTask<String, Integer, ArrayLi
         Log.i(TAG, "onPostExecute post data from wunderground");
 //        super.onPostExecute(result);
         mListViewAdapter.upDateEntries(result);
+
         if (mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
