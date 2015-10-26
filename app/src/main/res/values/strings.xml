@@ -10,4 +10,6 @@
     <string name="num_days_text">number of days to display: </string>
     <string name="switch_on_text_cel">celsius</string>
     <string name="switch_off_text_fah">fahrenheit</string>
+    <string name="switch_on_text_network">network location</string>
+    <string name="switch_off_text_zip">zip code</string>
 </resources>

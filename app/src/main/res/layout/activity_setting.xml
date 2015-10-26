@@ -9,7 +9,16 @@
               android:paddingTop="@dimen/activity_vertical_margin"
               tools:context="com.jackson.weather.activity.SettingActivity">
 
+    <Switch
+        android:id="@+id/zip_network_location_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="@string/switch_off_text_zip"
+        android:textOn="@string/switch_on_text_network"
+        />
+
     <LinearLayout
+        android:id="@+id/zip_code_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">

@@ -1,10 +1,12 @@
 package com.jackson.weather.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
@@ -26,6 +28,8 @@ public class SettingActivity extends AppCompatActivity {
     private TextView numOfDaysText;
     private EditText zipCodeEditText;
     private Switch celsiusFahrenheitSwitch;
+    private Switch zipNetworkLocationSwitch;
+    private TextWatcher mTextWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,7 @@ public class SettingActivity extends AppCompatActivity {
         numOfDaysText = (TextView) findViewById(R.id.number_of_days_text);
         mNumDayPicker = (NumberPicker) findViewById(R.id.number_of_days_picker);
         celsiusFahrenheitSwitch = (Switch) findViewById(R.id.celsius_fahrenheit_switch);
+        zipNetworkLocationSwitch = (Switch) findViewById(R.id.zip_network_location_switch);
 
         celsiusFahrenheitSwitch.setChecked(mSharedPreferencesStorage.getIsCelsius());
         celsiusFahrenheitSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -52,11 +57,31 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+
+
+        zipNetworkLocationSwitch.setChecked(mSharedPreferencesStorage.getIsNetworkLocation());
+        zipNetworkLocationSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mSharedPreferencesStorage.setIsNetworkLocation(true);
+                    zipCodeEditText.setEnabled(false);
+                    zipCodeEditText.setTextColor(Color.GRAY);
+                } else {
+                    mSharedPreferencesStorage.setIsNetworkLocation(false);
+                    zipCodeEditText.setEnabled(true);
+                    zipCodeEditText.setTextColor(Color.BLACK);
+                }
+            }
+        });
+
         numOfDaysText.setText("" + mSharedPreferencesStorage.getNumOfDays2Display());
 
         mNumDayPicker.setMinValue(1);
         mNumDayPicker.setMaxValue(10);
         mNumDayPicker.setWrapSelectorWheel(false);
+        mNumDayPicker.setValue(mSharedPreferencesStorage.getNumOfDays2Display());
 
         mNumDayPicker.setOnValueChangedListener(new OnValueChangeListener() {
 
@@ -67,32 +92,45 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        mSharedPreferencesStorage.setDays(Integer.parseInt(numOfDaysText.getText().toString()));
+        zipCodeEditText.setText(mSharedPreferencesStorage.getZipCode());
+        if(mSharedPreferencesStorage.getIsNetworkLocation()) {
+            zipCodeEditText.setEnabled(false);
+            zipCodeEditText.setTextColor(Color.GRAY);
+        }
 
-        TextWatcher textWatcher = new TextWatcher() {
+
+        mTextWatcher = new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (zipCodeEditText.getText().length() != DEFAULT_LENGTH_OF_ZIP_CODE) {
-                    mSharedPreferencesStorage.setZipCode(mSharedPreferencesStorage.ZIP_CODE_DEFAULT);
-                } else {
-                    try {
-                        Integer.parseInt(zipCodeEditText.getText().toString());
-                        mSharedPreferencesStorage.setZipCode(zipCodeEditText.getText().toString());
-                    } catch (Exception e) {
-                        e.getStackTrace();
-                    }
-                }
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                Log.d("zip", zipCodeEditText.getText().length()+"");
+                mSharedPreferencesStorage.setZipCode(zipCodeEditText.getText().toString());
+//                if (zipCodeEditText.getText().length() != DEFAULT_LENGTH_OF_ZIP_CODE) {
+//                    mSharedPreferencesStorage.setZipCode(mSharedPreferencesStorage.ZIP_CODE_DEFAULT);
+//                    Log.d("zip", zipCodeEditText.getText().length()+"");
+//                } else {
+//                    try {
+//                        Integer.parseInt(zipCodeEditText.getText().toString());
+//                        mSharedPreferencesStorage.setZipCode(zipCodeEditText.getText().toString());
+//                        Log.d("zip",zipCodeEditText.getText().toString());
+//                    } catch (Exception e) {
+//                        e.getStackTrace();
+//                    }
+//                }
             }
         };
+
+        zipCodeEditText.addTextChangedListener(mTextWatcher);
     }
 
     @Override
