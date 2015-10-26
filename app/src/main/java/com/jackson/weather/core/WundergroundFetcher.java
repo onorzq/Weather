@@ -14,15 +14,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by zhishengliu on 10/24/15.
  */
 public class WundergroundFetcher {
 
-    public WeatherData getWeatherData() {
+    public ArrayList<WeatherData> getWeatherData() {
         URLBuilder urlBuilder = new URLBuilder();
-        urlBuilder.setFeature("conditions/");
+        urlBuilder.setFeature("forecast10day/conditions/");
 //        urlBuilder.setSetting("lang:CN/");
         urlBuilder.setQuery("22202");
         urlBuilder.setFormat(".json");
@@ -57,20 +58,51 @@ public class WundergroundFetcher {
         }
     }
 
-    public WeatherData convertString2WeatherData(String inputString) {
-        WeatherData weatherData = new WeatherData();
+    public ArrayList<WeatherData> convertString2WeatherData(String inputString) {
 
         try {
+            ArrayList<WeatherData> weatherList = new ArrayList<WeatherData>();
             JSONObject jsonObject = new JSONObject(inputString);
             //TODO if the json return does not include the data we want
-            //TODO should return a list of weather info instead of just one day
-            weatherData.setTempC(jsonObject.getJSONObject("current_observation").getDouble("temp_c"));
 
+            int numOfDays = 10;
+            for(int i = 0; i < numOfDays; i++) {
+                weatherList.add(convertJson2WeatherData(jsonObject, i));
+            }
+
+            return weatherList;
         } catch (JSONException e) {
             e.printStackTrace();
             //TODO do something if no the input string is not a json object
+            return null;
         }
+    }
 
-        return weatherData;
+    public WeatherData convertJson2WeatherData(JSONObject json, int theNthDay) {
+
+        try {
+            JSONObject singleDayJson = json.getJSONObject("forecast")
+                    .getJSONObject("simpleforecast")
+                    .getJSONArray("forecastday")
+                    .getJSONObject(theNthDay);
+
+            WeatherData weatherData = new WeatherData();
+            weatherData.setDate(singleDayJson.getJSONObject("date").getInt("year") + "/" +
+                    singleDayJson.getJSONObject("date").getInt("month") + "/" +
+                    singleDayJson.getJSONObject("date").getInt("day") + " " +
+                    singleDayJson.getJSONObject("date").getString("weekday_short"));
+            weatherData.setDescription(singleDayJson.getString("conditions"));
+            weatherData.setLocation(json.getJSONObject("current_observation")
+                    .getJSONObject("display_location").getString("full"));
+            weatherData.setTempCHi(singleDayJson.getJSONObject("high").getString("celsius"));
+            weatherData.setTempFHi(singleDayJson.getJSONObject("high").getString("fahrenheit"));
+            weatherData.setTempCLo(singleDayJson.getJSONObject("low").getString("celsius"));
+            weatherData.setTempFLo(singleDayJson.getJSONObject("low").getString("fahrenheit"));
+
+            return weatherData;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

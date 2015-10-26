@@ -5,23 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.jackson.weather.R;
-import com.jackson.weather.activity.adapter.ImageAdapter;
 import com.jackson.weather.activity.adapter.ListViewAdapter;
 import com.jackson.weather.asynctask.LoadWeatherDataAsyncTask;
-import com.jackson.weather.model.WeatherData;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ListView mListView;
-    private TextView mTextView;
     private ListViewAdapter mListViewAdapter;
-    private LoadWeatherDataAsyncTask loadWeatherDataAsyncTask;
-    private List<WeatherData> mWeatherDataList = new ArrayList<WeatherData>();
+    private LoadWeatherDataAsyncTask mloadWeatherDataAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,25 +21,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mListView = (ListView) findViewById(R.id.weather_list);
-//        mTextView = (TextView) findViewById(R.id.hello);
+        mListViewAdapter = new ListViewAdapter(this);
+        mListView.setAdapter(mListViewAdapter);
 
+        mloadWeatherDataAsyncTask = new LoadWeatherDataAsyncTask(mListViewAdapter);
+        mloadWeatherDataAsyncTask.execute();
 
-
-//        mListViewAdapter = new ListViewAdapter(MainActivity.this, mWeatherDataList);
-//        mListView.setAdapter(mListViewAdapter);
-
-        ImageAdapter adapter = new ImageAdapter(this);
-
-
-        LoadWeatherDataAsyncTask task = new LoadWeatherDataAsyncTask(adapter);
-        task.execute();
-        mListView.setAdapter(adapter);
     }
-
-//    public void weatherDataFetched(List<WeatherData> weatherData) {
-//        ArrayAdapter<WeatherData> adapter = new ArrayAdapter<WeatherData>(this,R.layout.list_item, weatherData);
-//        mListView.setAdapter(adapter);
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
