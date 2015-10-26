@@ -1,11 +1,12 @@
 package com.jackson.weather.asynctask;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.jackson.weather.activity.adapter.ListViewAdapter;
-import com.jackson.weather.asynctask.listener.AsyncTaskCompletionListener;
 import com.jackson.weather.core.WundergroundFetcher;
 import com.jackson.weather.model.WeatherData;
 
@@ -17,14 +18,23 @@ import java.util.ArrayList;
 public class LoadWeatherDataAsyncTask extends AsyncTask<String, Integer, ArrayList<WeatherData>> {
     private static final String TAG = "LoadWeatherDataAsyncTask";
 
-//    private Context mContext;
-    private AsyncTaskCompletionListener<WeatherData> mListener;
+    private Context mContext;
     private ListViewAdapter mListViewAdapter;
+    private ProgressDialog mProgressDialog;
 
 
-    public LoadWeatherDataAsyncTask(ListViewAdapter adapter) {
-//        mContext = context;
+    public LoadWeatherDataAsyncTask(Context context, ListViewAdapter adapter) {
+        mContext = context;
         mListViewAdapter = adapter;
+        mProgressDialog = new ProgressDialog(context);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setMessage("Downloading Weather Data");
+        mProgressDialog.show();
     }
 
     @SuppressLint("LongLogTag")
@@ -46,5 +56,8 @@ public class LoadWeatherDataAsyncTask extends AsyncTask<String, Integer, ArrayLi
         Log.i(TAG, "onPostExecute post data from wunderground");
 //        super.onPostExecute(result);
         mListViewAdapter.upDateEntries(result);
+        if (mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 }

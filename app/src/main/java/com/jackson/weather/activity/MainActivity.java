@@ -1,5 +1,6 @@
 package com.jackson.weather.activity;
 
+import android.app.ProgressDialog;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,21 +19,29 @@ public class MainActivity extends AppCompatActivity implements LocationFinder.Lo
     private ListViewAdapter mListViewAdapter;
     private LoadWeatherDataAsyncTask mloadWeatherDataAsyncTask;
     private String latitudeAndlongitude;
+    private LocationFinder mLocationFinder;
     private boolean isAsyncTaskExecuted;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LocationFinder locationFinder = new LocationFinder(this, this);
-        locationFinder.detectLocation();
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setMessage("Finding Location");
+        mProgressDialog.show();
+
+        mLocationFinder = new LocationFinder(this, this);
+        mLocationFinder.detectLocation();
 
         mListView = (ListView) findViewById(R.id.weather_list);
         mListViewAdapter = new ListViewAdapter(this);
         mListView.setAdapter(mListViewAdapter);
 
-        mloadWeatherDataAsyncTask = new LoadWeatherDataAsyncTask(mListViewAdapter);
+        mloadWeatherDataAsyncTask = new LoadWeatherDataAsyncTask(this, mListViewAdapter);
 
         isAsyncTaskExecuted = false;
 
@@ -63,7 +72,13 @@ public class MainActivity extends AppCompatActivity implements LocationFinder.Lo
     @Override
     public void locationFound(Location location) {
         Log.d("main ", "location found, isAsyncTaskExecuted" + isAsyncTaskExecuted);
+
         latitudeAndlongitude = location.getLatitude() + "," + location.getLongitude();
+
+        if (mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+
         if (!isAsyncTaskExecuted) {
             mloadWeatherDataAsyncTask.execute(latitudeAndlongitude);
             isAsyncTaskExecuted = true;
