@@ -1,6 +1,7 @@
 package com.jackson.weather.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -63,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements LocationFinder.Lo
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
+            
             return true;
         }
 

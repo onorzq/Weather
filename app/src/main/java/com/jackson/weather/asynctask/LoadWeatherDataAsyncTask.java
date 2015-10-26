@@ -6,7 +6,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.jackson.weather.Storage.SharedPreferencesStorage;
+import com.jackson.weather.shareprefstorage.SharedPreferencesStorage;
 import com.jackson.weather.activity.adapter.ListViewAdapter;
 import com.jackson.weather.core.WundergroundFetcher;
 import com.jackson.weather.model.WeatherData;

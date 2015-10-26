@@ -1,5 +1,4 @@
-package com.jackson.weather.Storage;
-
+package com.jackson.weather.shareprefstorage;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -46,7 +45,7 @@ public class SharedPreferencesStorage {
     public void setZipCode(String zip){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(PREFS_ZIP,zip);
+        editor.putString(PREFS_ZIP, zip);
         editor.apply();
     }
 
@@ -70,6 +69,4 @@ public class SharedPreferencesStorage {
         editor.putBoolean(PREFS_IS_NETWORK_LOCATION, isNetworkLocation);
         editor.apply();
     }
-
-
 }

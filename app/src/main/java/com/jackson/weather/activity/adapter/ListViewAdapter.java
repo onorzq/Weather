@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jackson.weather.R;
-import com.jackson.weather.Storage.SharedPreferencesStorage;
+import com.jackson.weather.shareprefstorage.SharedPreferencesStorage;
 import com.jackson.weather.model.WeatherData;
 import com.koushikdutta.ion.Ion;
 
