@@ -16,6 +16,8 @@ import com.jackson.weather.asynctask.LoadWeatherDataAsyncTask;
 import com.jackson.weather.sensor.LocationFinder;
 
 public class MainActivity extends AppCompatActivity implements LocationFinder.LocationDetector {
+    private static final String TAG = "MainActivity";
+
     private ListView mListView;
     private ListViewAdapter mListViewAdapter;
     private LoadWeatherDataAsyncTask mloadWeatherDataAsyncTask;
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements LocationFinder.Lo
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.setMessage("Finding Location");
+        mProgressDialog.setMessage(this.getString(R.string.find_location));
         mProgressDialog.show();
 
         mLocationFinder = new LocationFinder(this, this);
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements LocationFinder.Lo
 
     @Override
     public void locationFound(Location location) {
-        Log.d("main ", "location found, isAsyncTaskExecuted" + isAsyncTaskExecuted);
+        Log.d(TAG, "location found, isAsyncTaskExecuted " + isAsyncTaskExecuted);
 
         latitudeAndlongitude = location.getLatitude() + "," + location.getLongitude();
 

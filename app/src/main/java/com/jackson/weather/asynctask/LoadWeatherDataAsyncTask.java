@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.jackson.weather.R;
 import com.jackson.weather.shareprefstorage.SharedPreferencesStorage;
 import com.jackson.weather.activity.adapter.ListViewAdapter;
 import com.jackson.weather.core.WundergroundFetcher;
@@ -36,7 +37,7 @@ public class LoadWeatherDataAsyncTask extends AsyncTask<String, Integer, ArrayLi
     protected void onPreExecute() {
         mProgressDialog.setCancelable(false);
         mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.setMessage("Downloading Weather Data");
+        mProgressDialog.setMessage(mContext.getString(R.string.download_weather_data));
         mProgressDialog.show();
     }
 

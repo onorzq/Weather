@@ -64,8 +64,7 @@ public class ListViewAdapter extends BaseAdapter {
         TextView locationTextView = (TextView) view.findViewById(R.id.location_text);
         TextView descriptionTextView = (TextView) view.findViewById(R.id.description_text);
         TextView dateTextView = (TextView) view.findViewById(R.id.date_text);
-//TODO setting of celsius and fahrenheit
-        boolean isCelsius = true;
+
         if (mSharedPreferencesStorage.getIsCelsius()) {
             hiTempTextView.setText(mWeatherDataArrayList.get(position).getTempCHi() + " °C");
             loTemptextView.setText(mWeatherDataArrayList.get(position).getTempCLo() + " °C");

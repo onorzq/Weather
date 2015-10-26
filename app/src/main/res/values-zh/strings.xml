@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">天气</string>
+    <string name="action_settings">设置</string>
+    <string name="title_activity_setting">设置</string>
+    <string name="default_zip_code">22202</string>
+    <string name="default_num_days">3</string>
+    <string name="zip_code_text">邮编：</string>
+    <string name="num_days_text">显示天数：</string>
+    <string name="switch_on_text_cel">摄氏</string>
+    <string name="switch_off_text_fah">华氏</string>
+    <string name="switch_on_text_network">网络定位</string>
+    <string name="switch_off_text_zip">邮编定位</string>
+    <string name="list_low_temp">低温</string>
+    <string name="list_high_temp">高温</string>
+    <string name="list_description">天气描述</string>
+    <string name="list_location">地理位置</string>
+    <string name="list_date">日期</string>
+    <string name="find_location">正在定位中</string>
+    <string name="download_weather_data">正在下载天气资料</string>
+</resources>

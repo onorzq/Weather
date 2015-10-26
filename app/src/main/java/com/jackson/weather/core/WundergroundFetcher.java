@@ -29,8 +29,6 @@ public class WundergroundFetcher {
     }
 
     public ArrayList<WeatherData> getWeatherData() {
-//        location = "22202";
-//        Log.d("weather fetc", location);
         URLBuilder urlBuilder = new URLBuilder();
         urlBuilder.setFeature("forecast10day/conditions/");
 //        urlBuilder.setSetting("lang:CN/");

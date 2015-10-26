@@ -21,6 +21,7 @@ import com.jackson.weather.R;
 import com.jackson.weather.shareprefstorage.SharedPreferencesStorage;
 
 public class SettingActivity extends AppCompatActivity {
+    private static final String TAG = "SettingActivity";
     public static final int DEFAULT_LENGTH_OF_ZIP_CODE = 5;
 
     private SharedPreferencesStorage mSharedPreferencesStorage;
@@ -113,16 +114,16 @@ public class SettingActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.d("zip", zipCodeEditText.getText().length()+"");
+                Log.d(TAG, zipCodeEditText.getText().length()+"");
                 mSharedPreferencesStorage.setZipCode(zipCodeEditText.getText().toString());
 //                if (zipCodeEditText.getText().length() != DEFAULT_LENGTH_OF_ZIP_CODE) {
 //                    mSharedPreferencesStorage.setZipCode(mSharedPreferencesStorage.ZIP_CODE_DEFAULT);
-//                    Log.d("zip", zipCodeEditText.getText().length()+"");
+//                    Log.d(TAG, zipCodeEditText.getText().length()+"");
 //                } else {
 //                    try {
 //                        Integer.parseInt(zipCodeEditText.getText().toString());
 //                        mSharedPreferencesStorage.setZipCode(zipCodeEditText.getText().toString());
-//                        Log.d("zip",zipCodeEditText.getText().toString());
+//                        Log.d(TAG,zipCodeEditText.getText().toString());
 //                    } catch (Exception e) {
 //                        e.getStackTrace();
 //                    }

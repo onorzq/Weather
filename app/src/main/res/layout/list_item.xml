@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/icon_linear_layout"
-        android:text="date"
+        android:text="@string/list_date"
         />
 
     <TextView
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="location"
+        android:text="@string/list_location"
         />
 
     <TextView
@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/date_text"
-        android:text="description"
+        android:text="@string/list_description"
         android:layout_toRightOf="@id/icon_linear_layout"
 
         />
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/description_text"
-        android:text="high temp"
+        android:text="@string/list_high_temp"
         android:layout_toRightOf="@id/icon_linear_layout"
         />
 
@@ -62,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/hi_temp_text"
-        android:text="low temp"
+        android:text="@string/list_low_temp"
         android:layout_toRightOf="@id/icon_linear_layout"
         />
 
