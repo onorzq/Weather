@@ -21,11 +21,13 @@ import java.util.ArrayList;
  */
 public class WundergroundFetcher {
 
-    public ArrayList<WeatherData> getWeatherData() {
+    public ArrayList<WeatherData> getWeatherData(String location) {
+//        location = "22202";
+//        Log.d("weather fetc", location);
         URLBuilder urlBuilder = new URLBuilder();
         urlBuilder.setFeature("forecast10day/conditions/");
 //        urlBuilder.setSetting("lang:CN/");
-        urlBuilder.setQuery("22202");
+        urlBuilder.setQuery(location);
         urlBuilder.setFormat(".json");
 
         return convertString2WeatherData(fetchStringFromURL(urlBuilder.toURL()));
@@ -66,7 +68,7 @@ public class WundergroundFetcher {
             //TODO if the json return does not include the data we want
 //TODO setting of number of days
             int numOfDays = 10;
-            for(int i = 0; i < numOfDays; i++) {
+            for (int i = 0; i < numOfDays; i++) {
                 weatherList.add(convertJson2WeatherData(jsonObject, i));
             }
 
@@ -106,4 +108,5 @@ public class WundergroundFetcher {
             return null;
         }
     }
+
 }

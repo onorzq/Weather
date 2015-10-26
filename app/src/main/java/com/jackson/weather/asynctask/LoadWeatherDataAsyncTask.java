@@ -32,7 +32,7 @@ public class LoadWeatherDataAsyncTask extends AsyncTask<String, Integer, ArrayLi
     protected ArrayList<WeatherData> doInBackground(String... params) {
 
         Log.i(TAG, "doInBackground get data from wunderground");
-        return new WundergroundFetcher().getWeatherData();
+        return new WundergroundFetcher().getWeatherData(params[0]);
     }
 
     @Override
