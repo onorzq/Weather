@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jackson.weather.R;
 import com.jackson.weather.model.WeatherData;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 
@@ -51,21 +53,25 @@ public class ListViewAdapter extends BaseAdapter {
         if (convertView == null) {
             view = mLayoutInflater.inflate(R.layout.list_item, parent, false);
         }
-//        ImageView imageView = (ImageView) view.findViewById(R.id.icon);
+        ImageView imageView = (ImageView) view.findViewById(R.id.weather_icon);
+        Ion.with(imageView)
+                .placeholder(android.R.drawable.ic_menu_help)
+                .error(android.R.drawable.ic_delete)
+                .load(mWeatherDataArrayList.get(position).getIconUrl());
+
         TextView hiTempTextView = (TextView) view.findViewById(R.id.hi_temp_text);
         TextView loTemptextView = (TextView) view.findViewById(R.id.lo_temp_text);
         TextView locationTextView = (TextView) view.findViewById(R.id.location_text);
         TextView descriptionTextView = (TextView) view.findViewById(R.id.description_text);
         TextView dateTextView = (TextView) view.findViewById(R.id.date_text);
-
+//TODO setting of celsius and fahrenheit
         boolean isCelsius = true;
-        if(isCelsius) {
-            hiTempTextView.setText(mWeatherDataArrayList.get(position).getTempCHi());
-            loTemptextView.setText(mWeatherDataArrayList.get(position).getTempCLo());
-        }
-        else {
-            hiTempTextView.setText(mWeatherDataArrayList.get(position).getTempFHi());
-            loTemptextView.setText(mWeatherDataArrayList.get(position).getTempFLo());
+        if (isCelsius) {
+            hiTempTextView.setText(mWeatherDataArrayList.get(position).getTempCHi() + " °C");
+            loTemptextView.setText(mWeatherDataArrayList.get(position).getTempCLo() + " °C");
+        } else {
+            hiTempTextView.setText(mWeatherDataArrayList.get(position).getTempFHi() + "°F");
+            loTemptextView.setText(mWeatherDataArrayList.get(position).getTempFLo() + "°F");
         }
         locationTextView.setText(mWeatherDataArrayList.get(position).getLocation());
         descriptionTextView.setText(mWeatherDataArrayList.get(position).getDescription());

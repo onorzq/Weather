@@ -2,22 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+<LinearLayout
+    android:id="@+id/icon_linear_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/icon"
+        android:id="@+id/weather_icon"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="6dip"
-         />
+        android:src="@android:drawable/ic_menu_help"
+        />
+
+</LinearLayout>
+
 
     <TextView
         android:id="@+id/date_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/icon_linear_layout"
         android:text="date"
         />
 
@@ -36,6 +44,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/date_text"
         android:text="description"
+        android:layout_toRightOf="@id/icon_linear_layout"
+
         />
 
     <TextView
@@ -44,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/description_text"
         android:text="high temp"
+        android:layout_toRightOf="@id/icon_linear_layout"
         />
 
     <TextView
@@ -52,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/hi_temp_text"
         android:text="low temp"
+        android:layout_toRightOf="@id/icon_linear_layout"
         />
 
 </RelativeLayout>

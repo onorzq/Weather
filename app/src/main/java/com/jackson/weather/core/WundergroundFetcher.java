@@ -64,7 +64,7 @@ public class WundergroundFetcher {
             ArrayList<WeatherData> weatherList = new ArrayList<WeatherData>();
             JSONObject jsonObject = new JSONObject(inputString);
             //TODO if the json return does not include the data we want
-
+//TODO setting of number of days
             int numOfDays = 10;
             for(int i = 0; i < numOfDays; i++) {
                 weatherList.add(convertJson2WeatherData(jsonObject, i));
@@ -98,6 +98,7 @@ public class WundergroundFetcher {
             weatherData.setTempFHi(singleDayJson.getJSONObject("high").getString("fahrenheit"));
             weatherData.setTempCLo(singleDayJson.getJSONObject("low").getString("celsius"));
             weatherData.setTempFLo(singleDayJson.getJSONObject("low").getString("fahrenheit"));
+            weatherData.setIconUrl(singleDayJson.getString("icon_url"));
 
             return weatherData;
         } catch (JSONException e) {

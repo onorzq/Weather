@@ -11,6 +11,7 @@ public class WeatherData {
     private String date;
     private String description;
     private String location;
+    private String iconUrl;
 
     public String getTempCHi() {
         return tempCHi;
@@ -66,5 +67,13 @@ public class WeatherData {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 }
